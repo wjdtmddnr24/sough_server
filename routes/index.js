@@ -29,19 +29,19 @@ router.post('/:id/:work_id', function (req, res, next) {
     User.findOne({id: req.params.id}, (err, user) => {
         if (err) throw error;
         if (!user) throw "no user";
-        var found = false;
+        var found = null;
         console.log(user);
         for (var i = 0; i < user.workspace.length; i++) {
             if (user.workspace[i]._id.toString() === req.params.work_id) {
-                found = true;
                 user.workspace[i].title = req.body.title;
                 user.workspace[i].content = req.body.content;
+                found = user.workspace[i];
                 break;
             }
         }
         user.markModified();
         user.save();
-        res.json({result: found ? "success" : "failed"});
+        res.json({result: found ? "success" : "failed", work: found});
     });
 });
 
@@ -53,7 +53,7 @@ router.post('/:id', function (req, res, next) {
             user = new User({id: req.params.id});
         user.workspace.push({title: req.body.title, content: req.body.content});
         user.save();
-        res.json({result: "success"});
+        res.json({result: "success", work: user.workspace[user.workspace.length - 1]});
     });
 });
 
