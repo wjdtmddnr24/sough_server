@@ -24,6 +24,18 @@ work : {
             content: String,
         }
  */
+router.delete('/:id/:work_id', function (req, res, next) {
+    User.findOne({id: req.params.id}, (err, user) => {
+        if (err) throw error;
+        if (!user) throw "no user";
+        console.log(user);
+        user.workspace.pull({_id: req.params.work_id});
+        user.markModified();
+        user.save();
+        res.json({result: "success", work: null});
+    });
+});
+
 router.post('/:id/:work_id', function (req, res, next) {
     console.log(req.body, req.params);
     User.findOne({id: req.params.id}, (err, user) => {
