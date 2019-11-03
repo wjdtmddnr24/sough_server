@@ -5,9 +5,11 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var mongoose = require('mongoose');
 
+var make = require('./make');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
+var makeRouter = require('./routes/make');
 
 var db = mongoose.connection;
 db.on('error', console.error);
@@ -16,7 +18,6 @@ db.once('open', function () {
 });
 
 mongoose.connect('mongodb://localhost/sough');
-
 
 var app = express();
 
@@ -31,6 +32,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/make', makeRouter);
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
@@ -49,5 +51,7 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+setInterval(make.start, 1000);
 
 module.exports = app;
