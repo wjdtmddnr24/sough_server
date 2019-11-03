@@ -19,7 +19,8 @@ router.post('/', function (req, res, next) {
         input : '1 2'
     }
     */
-    new Make({code: req.body.code, input: req.body.input}).save();
+    var make = new Make({code: req.body.code, input: req.body.input});
+    make.save();
     res.json({_id: make._id});
 });
 
