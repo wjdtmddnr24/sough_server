@@ -21,7 +21,7 @@ router.post('/', function (req, res, next) {
     */
     var make = new Make({code: req.body.code, input: req.body.input});
     make.save();
-    res.json({_id: make._id});
+    res.json(make);
 });
 
 module.exports = router;
